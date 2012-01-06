@@ -21,9 +21,14 @@ public class Entry implements Resource {
 
   public static class Builder extends ValidatingBuilder<Entry> {
 
-    private Entry e = new Entry();
+    private final Entry e;
 
     private Builder() {
+      this(new Entry());
+    }
+
+    public Builder(Entry e) {
+      this.e = e;
     }
 
     public Builder withEventId(Long eventId) {
@@ -64,11 +69,11 @@ public class Entry implements Resource {
 
 
   public EntityResponse<Entry> create(Client c) {
-    return c.createResource(this, Entry.class);
+    return c.createResource(this);
   }
 
   public EntityResponse<Entry> update(Client c) {
-    return c.updateResource(this, Entry.class);
+    return c.updateResource(this);
   }
 
   public Entry() {

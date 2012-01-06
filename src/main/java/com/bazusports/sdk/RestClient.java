@@ -28,23 +28,26 @@ public class RestClient implements Client {
     this.applicationId = applicationId;
   }
 
-  public <T extends Resource> EntityResponse<T> createResource(T entity, Class<T> cls) {
-    return updateResource(entity, cls);
+  public <T extends Resource> EntityResponse<T> createResource(T entity) {
+    return updateResource(entity);
   }
 
-  public <T extends Resource> EntityResponse<T> updateResource(T entity, Class<T> cls) {
+  public <T extends Resource> EntityResponse<T> updateResource(T entity) {
     org.apache.wink.client.Resource resource = client.resource(BASE_URI + "/resource/" + getResourceNameFrom(entity));
     String json = gson.toJson(entity);
     System.err.println("Calling resource: " + resource);
     ClientResponse response = resource.contentType(MediaType.APPLICATION_JSON_TYPE).post(json);
     if (response.getStatusType().getFamily() == Response.Status.Family.SUCCESSFUL) {
-      T retEntity = gson.fromJson(response.getEntity(String.class), cls);
+      T retEntity = fromJson(response.getEntity(String.class), entity);
       return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), retEntity);
     }
-    else {
-      T retEntity = gson.fromJson(json, cls);
-      return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), retEntity);
-    }
+    return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), null);
+  }
+
+  private <T extends Resource> T fromJson(String json, T entity) {
+    @SuppressWarnings("unchecked")
+    Class<T> cls = (Class<T>) entity.getClass();
+    return gson.fromJson(json, cls);
   }
 
   private String getResourceNameFrom(Object entity) {

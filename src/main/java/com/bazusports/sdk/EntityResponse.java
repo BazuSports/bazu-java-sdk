@@ -7,7 +7,7 @@ package com.bazusports.sdk;
  * Time: 6:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class EntityResponse<T> extends Response {
+public class EntityResponse<T extends Resource> extends Response {
 
   private T entity;
 
