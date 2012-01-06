@@ -10,6 +10,12 @@ import com.google.gson.reflect.TypeToken;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolation;
+
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+
 /**
  * Created by IntelliJ IDEA.
  * User: ilya
@@ -34,6 +40,20 @@ public class EntryTest {
   }
 
   @Test
+  public void randomInvalidTest2() {
+    try {
+      Entry.builder().
+              withEventId(1234L).
+              build();
+    } catch (ValidationException e) {
+      for (ConstraintViolation v : e.getViolations()) {
+        assertNotNull(v.getMessage());
+        assertFalse(v.getMessage().isEmpty());
+      }
+    }
+  }
+
+  @Test
   public void createEntryTest() {
     Entry e = Entry.builder().
         withEventId(1234L).
@@ -43,9 +63,8 @@ public class EntryTest {
         withLastName("Stering").
         build();
     EntityResponse<Entry> response = e.create(client);
-    System.err.println("Response code: " + response.getResponseCode());
-    System.err.println("Response body: " + response.getResponseBody());
-    System.err.println("Response entity: " + response.getEntity());
+    assertFalse(response.isSuccess());
+    assertNull(response.getEntity());
   }
 
   @Test

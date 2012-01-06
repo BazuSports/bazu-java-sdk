@@ -1,5 +1,8 @@
 package com.bazusports.sdk.model;
 
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 /**
  * Created by IntelliJ IDEA.
  * User: ilya
@@ -9,13 +12,13 @@ package com.bazusports.sdk.model;
  */
 public class ValidationException extends RuntimeException {
 
-//  private final Set<ConstraintViolation> violations;
-//
-//  public ValidationException(Set<ConstraintViolation> violations) {
-//    this.violations = violations;
-//  }
-//
-//  public Set<ConstraintViolation> getViolations() {
-//    return violations;
-//  }
+  private final Set<ConstraintViolation> violations;
+
+  public ValidationException(Set<ConstraintViolation> violations) {
+    this.violations = violations;
+  }
+
+  public Set<ConstraintViolation> getViolations() {
+    return violations;
+  }
 }

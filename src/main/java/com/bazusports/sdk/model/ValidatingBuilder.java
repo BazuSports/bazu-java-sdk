@@ -23,11 +23,14 @@ public abstract class ValidatingBuilder<T> {
     valFact = config.buildValidatorFactory();
   }
 
+  @SuppressWarnings("unchecked")
   public final T build() {
     T obj = construct();
     Set<ConstraintViolation<T>> violations = valFact.getValidator().validate(obj);
     if (!violations.isEmpty()) {
-      throw new ValidationException();
+      // The cast to object is needed.  Seems to be a java generics casting bug.  Probably this...
+      // http://bugs.sun.com/view_bug.do?bug_id=6932571
+      throw new ValidationException((Set<ConstraintViolation>) (Object) violations);
     }
     return obj;
   }
