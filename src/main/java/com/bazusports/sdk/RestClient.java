@@ -3,7 +3,6 @@ package com.bazusports.sdk;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.apache.wink.client.ClientResponse;
 
 import javax.ws.rs.core.MediaType;
@@ -29,22 +28,22 @@ public class RestClient implements Client {
     this.applicationId = applicationId;
   }
 
-  public <T extends Resource> EntityResponse<T> createResource(T entity) {
-    return updateResource(entity);
+  public <T extends Resource> EntityResponse<T> createResource(T entity, Class<T> cls) {
+    return updateResource(entity, cls);
   }
 
-  public <T extends Resource> EntityResponse<T> updateResource(T entity) {
+  public <T extends Resource> EntityResponse<T> updateResource(T entity, Class<T> cls) {
     org.apache.wink.client.Resource resource = client.resource(BASE_URI + "/resource/" + getResourceNameFrom(entity));
     String json = gson.toJson(entity);
     System.err.println("Calling resource: " + resource);
     ClientResponse response = resource.contentType(MediaType.APPLICATION_JSON_TYPE).post(json);
     if (response.getStatusType().getFamily() == Response.Status.Family.SUCCESSFUL) {
-      T retEntity = gson.fromJson(response.getEntity(String.class), new TypeToken<T>() {}.getType());
+      T retEntity = gson.fromJson(response.getEntity(String.class), cls);
       return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), retEntity);
     }
     else {
-      T retEntity = gson.fromJson(json, new TypeToken<T>() {}.getType());
-      return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), null);
+      T retEntity = gson.fromJson(json, cls);
+      return new EntityResponse<T>(response.getStatusCode(), response.getMessage(), retEntity);
     }
   }
 

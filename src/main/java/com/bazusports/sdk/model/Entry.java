@@ -64,11 +64,11 @@ public class Entry implements Resource {
 
 
   public EntityResponse<Entry> create(Client c) {
-    return c.createResource(this);
+    return c.createResource(this, Entry.class);
   }
 
   public EntityResponse<Entry> update(Client c) {
-    return c.updateResource(this);
+    return c.updateResource(this, Entry.class);
   }
 
   public Entry() {

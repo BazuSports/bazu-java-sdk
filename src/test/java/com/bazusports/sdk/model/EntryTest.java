@@ -3,6 +3,10 @@ package com.bazusports.sdk.model;
 import com.bazusports.sdk.Client;
 import com.bazusports.sdk.EntityResponse;
 import com.bazusports.sdk.RestClient;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -41,6 +45,13 @@ public class EntryTest {
     EntityResponse<Entry> response = e.create(client);
     System.err.println("Response code: " + response.getResponseCode());
     System.err.println("Response body: " + response.getResponseBody());
-    System.err.println("Response body: " + response.getEntity());
+    System.err.println("Response entity: " + response.getEntity());
+  }
+
+  @Test
+  public void jsonTest() {
+    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+    Entry e = gson.fromJson("{\"event_id\": 12345}", new TypeToken<Entry>() {}.getType());
+    System.err.println("ENTRY: " + e);
   }
 }

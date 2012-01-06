@@ -9,7 +9,7 @@ package com.bazusports.sdk;
  */
 public interface Client {
 
-  public <T extends Resource> EntityResponse<T> createResource(T entity);
+  public <T extends Resource> EntityResponse<T> createResource(T entity, Class<T> cls);
 
-  public <T extends Resource> EntityResponse<T> updateResource(T entity);
+  public <T extends Resource> EntityResponse<T> updateResource(T entity, Class<T> cls);
 }
